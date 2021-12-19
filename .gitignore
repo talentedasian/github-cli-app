@@ -1,2 +1,5 @@
 ## java git ignores
 target/**
+
+## idea
+./idea
