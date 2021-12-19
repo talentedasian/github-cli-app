@@ -1,7 +1,7 @@
-package github.cli.app.config;
+package github.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gmail.cli.app.Credentials;
+import github.Credentials;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Tag("Domain")
 public class CredentialsTest {
 
     Path defaultPath = Credentials.defaultConfigPath;

@@ -2,4 +2,7 @@
 target/**
 
 ## idea
-./idea
+.idea/
+
+## keys
+creds.json

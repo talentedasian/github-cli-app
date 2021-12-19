@@ -1,6 +1,6 @@
-package gmail.cli.app.app;
+package github.cli.app;
 
-import gmail.cli.app.Credentials;
+import github.Credentials;
 
 public class GmailMain {
 

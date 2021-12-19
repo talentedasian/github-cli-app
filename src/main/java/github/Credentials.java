@@ -1,4 +1,4 @@
-package gmail.cli.app;
+package github;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -24,28 +23,13 @@ public class Credentials {
     @SuppressWarnings("Singleton")
     private static Credentials creds = null;
 
-    private final String apiKey;
+    private final String clientKey;
     private final String secretKey;
-    private final List<String> redirectUris;
-    private final String authProvider;
-    private final String projectId;
-    private final String authUri;
-    private final String tokenUri;
 
-    private Credentials(@JsonProperty("apiKey") String apiKey,
-                        @JsonProperty("secretKey") String secretKey,
-                        @JsonProperty("redirectUris") List<String> redirectUris,
-                        @JsonProperty("authProvider") String authProvider,
-                        @JsonProperty("projectId") String projectId,
-                        @JsonProperty("authUri") String authUri,
-                        @JsonProperty("tokenUri") String tokenUri) {
-        this.apiKey = apiKey;
+    private Credentials(@JsonProperty("clientKey") String clientKey,
+                        @JsonProperty("secretKey") String secretKey) {
+        this.clientKey = clientKey;
         this.secretKey = secretKey;
-        this.redirectUris = redirectUris;
-        this.authProvider = authProvider;
-        this.projectId = projectId;
-        this.authUri = authUri;
-        this.tokenUri = tokenUri;
     }
 
     /**
@@ -53,7 +37,7 @@ public class Credentials {
      * config file.
      */
     public static void load() {
-        assertCredNotNull();
+        assertCredNotInitialised();
         try {
             creds = new ObjectMapper().readValue(defaultConfigPath.toFile(), Credentials.class);
         } catch (IOException e) {
@@ -67,7 +51,7 @@ public class Credentials {
      * @param pathToFile the path to the config file
      */
     public static void load(Path pathToFile) throws IOException {
-        assertCredNotNull();
+        assertCredNotInitialised();
 
         creds = new ObjectMapper().readValue(defaultConfigPath.toFile(), Credentials.class);
     }
@@ -84,7 +68,7 @@ public class Credentials {
         creds = null;
     }
 
-    private static void assertCredNotNull() {
+    private static void assertCredNotInitialised() {
         if (creds != null)
             throw new IllegalStateException("Credentials has already been loaded.");
     }
@@ -98,32 +82,12 @@ public class Credentials {
         return Objects.requireNonNull(creds, "Credentials has not been initialized yet");
     }
 
-    public String apiKey() {
-        return apiKey;
+    public String clientKey() {
+        return clientKey;
     }
 
     public String secretKey() {
         return secretKey;
-    }
-
-    public String authUri() {
-        return authUri;
-    }
-
-    public String authProvider() {
-        return authProvider;
-    }
-
-    public List<String> redirectUris() {
-        return List.copyOf(redirectUris);
-    }
-
-    public String projectId() {
-        return projectId;
-    }
-
-    public String tokenUri() {
-        return tokenUri;
     }
 
     @Override
@@ -133,13 +97,13 @@ public class Credentials {
 
         Credentials that = (Credentials) o;
 
-        if (apiKey != null ? !apiKey.equals(that.apiKey) : that.apiKey != null) return false;
-        return secretKey != null ? secretKey.equals(that.secretKey) : that.secretKey == null;
+        if (!Objects.equals(clientKey, that.clientKey)) return false;
+        return Objects.equals(secretKey, that.secretKey);
     }
 
     @Override
     public int hashCode() {
-        int result = apiKey != null ? apiKey.hashCode() : 0;
+        int result = clientKey != null ? clientKey.hashCode() : 0;
         result = 31 * result + (secretKey != null ? secretKey.hashCode() : 0);
         return result;
     }
