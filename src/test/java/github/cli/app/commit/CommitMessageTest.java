@@ -7,7 +7,7 @@ import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("@Domain")
+@Tag("Domain")
 public class CommitMessageTest {
 
     @Test
