@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("Domain")
-public class CommitMessageTest {
+public class CommitTest {
 
     @Test
     public void successfulCommitRequestShouldReturnId() throws Exception{

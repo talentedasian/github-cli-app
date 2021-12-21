@@ -22,6 +22,7 @@ public class Credentials {
 
     @SuppressWarnings("Singleton")
     private static Credentials creds = null;
+    private static Object lock = new Object();
 
     private final String clientKey;
     private final String secretKey;
@@ -37,11 +38,15 @@ public class Credentials {
      * config file.
      */
     public static void load() {
-        assertCredNotInitialised();
+        if (!defaultConfigPath.toFile().exists()) {
+            logger.info(DEFAULT_CONFIG_NOT_FOUND);
+            return;
+        }
+
         try {
             creds = new ObjectMapper().readValue(defaultConfigPath.toFile(), Credentials.class);
         } catch (IOException e) {
-            logger.info(DEFAULT_CONFIG_NOT_FOUND);
+            e.printStackTrace();
         }
     }
 
@@ -51,26 +56,14 @@ public class Credentials {
      * @param pathToFile the path to the config file
      */
     public static void load(Path pathToFile) throws IOException {
-        assertCredNotInitialised();
-
-        creds = new ObjectMapper().readValue(defaultConfigPath.toFile(), Credentials.class);
+        creds = new ObjectMapper().readValue(pathToFile.toFile(), Credentials.class);
     }
 
     /**
      * Initializes the singleton credentials into null.
-     *
-     * @throws IllegalStateException is thrown if the credentials has not been loaded yet.
      */
     public static void unLoad() {
-        if (creds == null)
-            throw new IllegalStateException("Cannot unload credentials if it has not been loaded yet.");
-
         creds = null;
-    }
-
-    private static void assertCredNotInitialised() {
-        if (creds != null)
-            throw new IllegalStateException("Credentials has already been loaded.");
     }
 
     /**
@@ -79,7 +72,9 @@ public class Credentials {
      * @return the credentials that has been loaded, if it was.
      */
     public static Credentials instance() {
-        return Objects.requireNonNull(creds, "Credentials has not been initialized yet");
+        synchronized (lock) {
+            return Objects.requireNonNull(creds, "Credentials has not been initialized yet");
+        }
     }
 
     public String clientKey() {
