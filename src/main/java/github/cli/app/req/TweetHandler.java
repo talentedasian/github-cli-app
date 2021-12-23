@@ -4,8 +4,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
-import static java.net.http.HttpResponse.BodyHandlers.ofString;
-
 public class TweetHandler implements HandlerRequest {
 
     private final HttpClient httpClient;
@@ -18,7 +16,7 @@ public class TweetHandler implements HandlerRequest {
 
     @Override
     public CompletableFuture<HttpResponse<String>> query() {
-        return httpClient.sendAsync(new TweetRequest(tweetId), ofString());
+        return httpClient.sendAsync(new TweetRequest(tweetId), HttpResponse.BodyHandlers.ofString());
     }
 
     @Override
