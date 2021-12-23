@@ -26,11 +26,14 @@ public class Credentials {
 
     private final String clientKey;
     private final String secretKey;
+    private final String bearerToken;
 
     private Credentials(@JsonProperty("clientKey") String clientKey,
-                        @JsonProperty("secretKey") String secretKey) {
+                        @JsonProperty("secretKey") String secretKey,
+                        @JsonProperty("bearerToken") String bearerToken) {
         this.clientKey = clientKey;
         this.secretKey = secretKey;
+        this.bearerToken = bearerToken;
     }
 
     /**
@@ -83,6 +86,10 @@ public class Credentials {
 
     public String secretKey() {
         return secretKey;
+    }
+
+    public String bearerToken() {
+        return bearerToken;
     }
 
     @Override

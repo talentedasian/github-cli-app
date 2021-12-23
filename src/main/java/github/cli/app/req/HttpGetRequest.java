@@ -10,15 +10,15 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class GithubHttpGetRequest extends HttpRequest {
+public abstract class HttpGetRequest extends HttpRequest {
 
-    private final String BASE_URI = "https://api.github.com/";
+    public static final String BASE_URI = "https://api.twitter.com/2";
 
     private final String uri;
 
     private final HttpRequest.Builder reqBuilder;
 
-    public GithubHttpGetRequest(String uri, String... queryParams) {
+    public HttpGetRequest(String uri, String... queryParams) {
         this.uri = uri.formatted(queryParams);
 
         reqBuilder = HttpRequest.newBuilder(URI.create(BASE_URI.concat(this.uri)))

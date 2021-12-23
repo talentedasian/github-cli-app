@@ -18,9 +18,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 
-public class GithubCLIMain {
+public class CLIMain {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
         Credentials.load();
         var creds = Credentials.instance();
         AnsiConsole.systemInstall();

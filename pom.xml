@@ -68,6 +68,11 @@
             <artifactId>consoleui</artifactId>
             <version>0.0.13</version>
         </dependency>
+        <dependency>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>asciitable</artifactId>
+            <version>0.3.2</version>
+        </dependency>
         <!-- GUI/TUI TERMINAL !-->
 
     </dependencies>
@@ -87,7 +92,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>github.cli.app.GithubCLIMain</mainClass>
+                                    <mainClass>github.cli.app.CLIMain</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>

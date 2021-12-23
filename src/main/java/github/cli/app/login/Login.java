@@ -1,7 +1,7 @@
 package github.cli.app.login;
 
 import github.Credentials;
-import github.cli.app.req.GithubHttpGetRequest;
+import github.cli.app.req.HttpGetRequest;
 
 import java.io.*;
 import java.net.URI;
@@ -11,15 +11,14 @@ import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-public class GithubLogin {
+public class Login {
 
     public static final Path LOGIN_PATH = Paths.get("login.txt");
 
     private static String token = null;
-    private GithubLogin() {
+    private Login() {
         throw new UnsupportedOperationException();
     }
 
@@ -29,8 +28,8 @@ public class GithubLogin {
             if (loginFile.exists()) {
                 String tokenFromFile = new BufferedReader(new FileReader(loginFile)).readLine();
                 if (tokenFromFile.isEmpty() || tokenFromFile.isBlank()) throw new IllegalStateException("No user is currently logged in");
-                GithubLogin.token = tokenFromFile;
-                return GithubLogin.token;
+                Login.token = tokenFromFile;
+                return Login.token;
             }
 
             throw new IllegalStateException("No user is currently logged in");
@@ -63,7 +62,7 @@ public class GithubLogin {
         File file = LOGIN_PATH.toFile();
         if (file.exists()) {
             String clientId = Credentials.instance().clientKey();
-            String baseUri = GithubHttpGetRequest.BASE_URI;
+            String baseUri = HttpGetRequest.BASE_URI;
             HttpRequest req = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.noBody())
                     .header("Authorization", basicAuth())

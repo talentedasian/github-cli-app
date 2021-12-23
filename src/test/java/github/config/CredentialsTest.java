@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("Domain")
 public class CredentialsTest {
 
-    Path CREDS_PATH = Paths.get("../../creds.json");
+    Path CREDS_PATH = Paths.get("../../creds.json").toAbsolutePath().normalize();
     ObjectMapper fileReader = new ObjectMapper();
 
     @AfterEach

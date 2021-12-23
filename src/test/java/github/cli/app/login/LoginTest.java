@@ -3,7 +3,6 @@ package github.cli.app.login;
 import github.Credentials;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -21,21 +20,21 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Tag("Domain")
-public class GithubLoginTest {
+public class LoginTest {
 
     Path CREDS_PATH = Paths.get("../../creds.json");
 
     @AfterEach
     public void teardown() throws IOException {
-        GithubLogin.unInit();
+        Login.unInit();
     }
 
-    Path LOGIN_PATH = GithubLogin.LOGIN_PATH;
+    Path LOGIN_PATH = Login.LOGIN_PATH;
 
     @Test
     public void validateContents() throws Exception{
         String access_token = "access_token";
-        GithubLogin.init(access_token);
+        Login.init(access_token);
 
         File loginFile = LOGIN_PATH.toFile();
 
@@ -50,16 +49,16 @@ public class GithubLoginTest {
         String access_token_prior = "access_token_before";
         String access_token_predated = "access_token_after";
 
-        GithubLogin.init(access_token_prior);
-        GithubLogin.init(access_token_predated);
+        Login.init(access_token_prior);
+        Login.init(access_token_predated);
 
-        assertThat(GithubLogin.token())
+        assertThat(Login.token())
                 .isEqualTo(access_token_predated);
     }
 
     @Test
     public void noLoggedInUserThrowsIllegalStateException() throws Exception{
-        ThrowingCallable notLoggedIn = () -> GithubLogin.token();
+        ThrowingCallable notLoggedIn = () -> Login.token();
 
         assertThatThrownBy(notLoggedIn)
                 .isInstanceOf(IllegalStateException.class)
@@ -69,7 +68,7 @@ public class GithubLoginTest {
     @Test
     public void notLoggedInIfFileIsMissing() throws Exception{
         Credentials.load(CREDS_PATH);
-        boolean isLoggedIn = GithubLogin.isLoggedIn(HttpClient.newHttpClient());
+        boolean isLoggedIn = Login.isLoggedIn(HttpClient.newHttpClient());
 
         assertThat(isLoggedIn)
                 .isFalse();
@@ -78,14 +77,14 @@ public class GithubLoginTest {
     @Test
     public void non200HttpReturnShouldNotBeLoggedIn() throws Exception{
         Credentials.load(CREDS_PATH);
-        GithubLogin.init("fakeInit");
+        Login.init("fakeInit");
 
         HttpClient client = mock(HttpClient.class);
         HttpResponse res = new FakeResponse(400);
 
         when(client.sendAsync(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> res));
 
-        boolean isLoggedIn = GithubLogin.isLoggedIn(client);
+        boolean isLoggedIn = Login.isLoggedIn(client);
 
         assertThat(isLoggedIn)
                 .isFalse();
@@ -94,14 +93,14 @@ public class GithubLoginTest {
     @Test
     public void ok200HttpReturnShouldNotBeLoggedIn() throws Exception{
         Credentials.load(CREDS_PATH);
-        GithubLogin.init("fakeInit");
+        Login.init("fakeInit");
 
         HttpClient client = mock(HttpClient.class);
         HttpResponse res = new FakeResponse(200);
 
         when(client.sendAsync(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> res));
 
-        boolean isLoggedIn = GithubLogin.isLoggedIn(client);
+        boolean isLoggedIn = Login.isLoggedIn(client);
 
         assertThat(isLoggedIn)
                 .isTrue();
